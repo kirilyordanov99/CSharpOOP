@@ -1,0 +1,95 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace avtomat_razpoznavatel
+{
+    class Program
+    {
+        // Each row and each column represents an element/state (ex. Z0, Z1, Z2, Z3)
+        //The given automat is A=<{z0, z1, z2, z3}, {a, b}, δ, {z3}, z0>,
+        // each element represents the path between two states and '-'
+        // represents that there is no path (ex. element with coordinates
+        private static readonly char[][] scheme = new char[][]
+                                   { new char[] {'a', 'b', 'a', '-' },
+                                    new char[] {'a', 'b', '-', '-'},
+                                    new char[] {'b', 'a', '-', '-' },
+                                     new char[] {'b', '-', '-','-' }
+                                   };
+        // The characters that are allowed to be used in a word
+        private static readonly char[] acceptableCharacters = new char[] { 'a', 'b' };
+        // The index of the state from which the path should start
+        private const int StartIndex = 0;
+        // The last state value in order for the path to be valid
+        private static List<int> LastStateValue = new List<int> { 0, 1 };
+        private static List<int> path = new List<int>();
+        /// <summary>
+        /// Checks if the given word contains only allowed characters
+        /// </summary>
+        /// <param name="word">The word that should be checked</param>
+        /// <returns>True if the word contains only valid characters.
+        /// False if the word contains a not valid character</returns>
+        public static bool IsValidWord(string word)
+        {
+            if (string.IsNullOrEmpty(word)) return false;
+            foreach (char c in word)
+            {
+                if (!acceptableCharacters.Contains(c)) return false;
+            }
+            return true;
+        }
+        /// <summary>
+        /// Recursively checks if a word is recognized by the automat
+        /// taking the scheme into consideration
+        /// </summary>
+        /// <param name="word">The word that should be checked</param>
+        /// <param name="index">The index from which the automat 
+        /// should start checking the word</param>
+        /// <param name="state">The state in which is the path currently</param>
+        /// <returns>True if the automat recognizes the word and false 
+        /// if it does not.</returns>
+        public static bool Automata(string word, int index, int state)
+        {
+            if (index == word.Length)
+            {
+                if (LastStateValue.Contains(state)) return true;
+                return false;
+            }
+            for (int i = 0; i < scheme[state].Length; i++)
+            {
+                if (scheme[state][i] == word[index])
+                {
+                    if (Automata(word, index + 1, i))
+                    {
+                        path.Add(i);
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        static void Main(string[] args)
+        {
+            string word = Console.ReadLine();
+            if (!IsValidWord(word))
+            {
+                Console.WriteLine("The automat did not recognize the word!");
+            }
+            else if (Automata(word, 0, StartIndex))
+            {
+                path.Add(StartIndex);
+                Console.WriteLine("The automat recognized the word!");
+                Console.WriteLine("The path is (Pattern: {previousState} -{character}-> { newState}...)");
+                path.Reverse();
+                for (int i = 0; i < path.Count; i++)
+                {
+                    Console.Write($"Z{path[i]} {(i < word.Length ? $"-{word[i]}-> " : string.Empty)} ");
+                }
+            }
+            else
+            {
+                Console.WriteLine("The automat did not recognize the word!");
+            }
+        }
+    }
+}
