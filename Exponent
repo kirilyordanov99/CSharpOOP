@@ -1,0 +1,19 @@
+namespace a_na_stepen_b
+{
+    class Program //testing linear complexity
+    {
+        static void Main(string[] args)
+        { 
+        Console.Write("a = ");
+            int a = int.Parse(Console.ReadLine());
+        Console.Write("b = ");
+            int b = int.Parse(Console.ReadLine());
+        decimal result = 1;
+            for (int i = 0; i<b; i++)
+            {
+                result *= a;
+            }
+    Console.WriteLine("a^b = " + result);//exponent
+        }
+    }
+}
