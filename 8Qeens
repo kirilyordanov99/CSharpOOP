@@ -1,0 +1,151 @@
+using System;
+using System.Collections.Generic;
+
+namespace _8queens
+{
+
+    class Program //recursion that will check if we can place the queen
+    {
+        const int Size = 8;//number of qeens
+        private static int[,] Board = new int[Size, Size];//initializing board
+
+        static HashSet<int> attackedrows= new HashSet<int>();//checking attacked rows
+        static HashSet<int> attackedcols = new HashSet<int>();//checking attacked cols
+        static void Solve(int row)//placing the queens
+        {
+            if (row == Size)
+            {
+                PrintSolution();
+                return;
+            }
+            else
+            {
+                for (int col = 0; col < Size; col++)
+                {
+                   if (Canplacequeen(row, col))
+                    {
+                        Markattackedfields(row, col);
+                        Solve(row + 1);//when we check 1 col we continue
+                        Unmarkattackedfields(row, col);//using this if we cant find solution
+                    }
+                }
+            }
+        }
+
+        private static void PrintSolution()//here we tell the program how we want to 
+                                           //display queen on the board
+        {
+            for (int row = 0; row < Size; row++)//checking row 
+            {
+                for (int col = 0; col < Size; col++)//checking cols
+                {
+                    if (Board[row, col] == 1)//if we can display the queens we have to chose a way to display it 
+                    {
+                        Console.Write("1");//marking the queens
+                    }
+                    else
+                    {
+                        Console.Write("0");//marking the fields
+                    }
+                }
+                Console.WriteLine();
+
+            }
+            Console.WriteLine();
+        }
+       
+        private static void Markattackedfields(int row, int col)//placing queen on the current row/col
+        {
+            Board[row, col] = 1;
+            attackedrows.Add(row);
+            attackedcols.Add(col);
+        }
+        private static void Unmarkattackedfields(int row, int col)//if a queen is already placed here we cant place another one 
+        {
+            Board[row, col] = 0;
+            attackedrows.Remove(row);
+            attackedcols.Remove(col);
+        }
+        private static bool Canplacequeen(int row, int col)//checking if position is free 
+        {
+            if (attackedrows.Contains(row))
+            {
+                return false;//if row is not safe return false
+            }
+            if (attackedcols.Contains(col))
+            {
+                return false;//if col is not safe return false
+            }
+            //checking left-up diagonal
+            for (int i = 1; i < Size; i++)
+            {
+                int currentRow = row - i;
+                int currentCol = col - i;
+
+                if (currentRow < 0 || currentRow >= Size
+                    || currentCol < 0 || currentCol >= Size)
+                {
+                    break;
+                }
+                if (Board[currentRow, currentCol] == 1)//here we have a queen
+                {
+                    return false;
+                }
+            }
+            //checking rigth-up diagonal
+            for (int i = 1; i < Size; i++)
+            {
+                int currentRow = row - i;
+                int currentCol = col + i;
+
+                if (currentRow < 0 || currentRow >= Size
+                    || currentCol < 0 || currentCol >= Size)
+                {
+                    break;
+                }
+                if (Board[currentRow, currentCol] == 1)//here we have a queen
+                {
+                    return false;
+                }
+            }
+            //checking left-down diagonal
+            for (int i = 1; i < Size; i++)
+            {
+                int currentRow = row + i;
+                int currentCol = col - i;
+
+                if (currentRow < 0 || currentRow >= Size
+                    || currentCol < 0 || currentCol >= Size)
+                {
+                    break;
+                }
+                if (Board[currentRow, currentCol] == 1)//here we have a queen
+                {
+                    return false;
+                }
+            }
+            //checking right-down diagonal
+            for (int i = 1; i < Size; i++)
+            {
+                int currentRow = row + i;
+                int currentCol = col + i;
+
+                if (currentRow < 0 || currentRow >= Size
+                    || currentCol < 0 || currentCol >= Size)
+                {
+                    break;
+                }
+                if (Board[currentRow, currentCol] == 1)//here we have a queen
+                {
+                    return false;
+                }
+            }
+            return true;//if everything is fine we can place queen
+        }
+        static void Main(string[] args)
+        {
+            Solve(0);
+        }
+    }
+
+}
