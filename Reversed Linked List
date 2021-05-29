@@ -1,0 +1,78 @@
+using System;
+
+namespace Reverse_Linked_List
+{
+    class Program
+    {//reversing linked list using iteration
+        static void Main(string[] args)//input:1,2,3,4 //:output:4,3,2,1
+        {
+            LinkedList list = new LinkedList();
+            list.AddNode(new LinkedList.Node(1));
+            list.AddNode(new LinkedList.Node(2));
+            list.AddNode(new LinkedList.Node(3));
+            list.AddNode(new LinkedList.Node(4));
+
+            Console.WriteLine("Linked list:");
+
+            list.ReverseList();
+
+            Console.WriteLine("Reversed List");
+            list.PrintList();
+        }
+    }
+    class LinkedList
+    {
+        Node head;
+
+        public class Node
+        {
+            public int data;
+            public Node next;
+
+            public Node(int d)
+            {
+                data = d;
+                next = null;
+            }
+        }
+        public void AddNode(Node node)
+        {
+            if (head == null)
+                head = node;
+            else{
+                Node temp = head;
+                while (temp.next != null)
+                {
+                    temp = temp.next;
+                }
+                temp.next = node;
+            }
+        }
+        public void ReverseList()//here we are reversing the list
+        {
+            Node prev = null, current = head, next = null;
+            while (current != null)
+            {
+                next = current.next;
+                current.next = prev;
+                prev = current;
+                current = next;
+            }
+            head = prev;
+        }
+        public void PrintList()
+        {
+            Node current = head;
+            while (current != null)
+            {
+                Console.WriteLine(current.data + "");
+                current = current.next;
+            }
+            Console.WriteLine();
+        }
+
+    }
+}
+
+0x01eb2bfd029cf3f855ecc9f3dcaac60b4b68113b
+0.001126000
